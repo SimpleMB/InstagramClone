@@ -3,10 +3,7 @@ package com.example.hp.instagramclone;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
+
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,19 +13,20 @@ import android.widget.Toast;
 
 import com.parse.LogInCallback;
 import com.parse.LogOutCallback;
-import com.parse.Parse;
 import com.parse.ParseInstallation;
+import com.parse.ParseObject;
+import com.parse.SaveCallback;
 import com.parse.SignUpCallback;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
 
 
-public class MainActivity extends AppCompatActivity {
+public class Register extends AppCompatActivity {
 
     private EditText userName, userPass;
     private TextView status;
-    private Button btnRegister, btnLogin, btnLogout;
+    private Button btnRegister, btnLogin, btnLogout, btnAddValue;
 
 
     @Override
@@ -43,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
         btnRegister =   findViewById(R.id.btnRegister);
         btnLogin =      findViewById(R.id.btnLogin);
         btnLogout =     findViewById(R.id.btnLogout);
+        btnAddValue=    findViewById(R.id.btnAddValue);
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +106,24 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+            }
+        });
+
+        btnAddValue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final ParseObject value = new ParseObject("Value");
+                value.put("UserName",userName.getText().toString());
+                value.saveInBackground(new SaveCallback() {
+                    @Override
+                    public void done(ParseException e) {
+                        if (e==null) {
+                            Toast.makeText(Register.this, "New User: "+value.get("UserName")+ "\n" + "Saved successfully", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(Register.this, e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
             }
         });
     }
